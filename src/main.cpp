@@ -2,6 +2,7 @@
 #include "getSongFolder.hpp"
 
 int main() {
-    printf("%s\n", getSongFolder("fgadfg"));
+    printf("%s\n", getSongFolder("www.google.com"));
+    // getchar();
     return 0;
 }

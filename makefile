@@ -2,7 +2,7 @@ SRC_DIR := src
 OUT_DIR := out
 CC := gcc
 CXXC := g++
-GFLAGS := -O2 
+GFLAGS := -O2 -Wall
 CFLAGS := 
 CPPFLAGS := 
 LFLAGS := -lws2_32
@@ -27,4 +27,4 @@ $(OUT_DIR)/%.cpp.o: $(SRC_DIR)/%.cpp
 	$(CXXC) -c -o $@ $^ $(CPPFLAGS) $(GFLAGS) -std=c++$(CPP_STD)
 
 clean:
-	rm -rf out/*
+	rm -rf out/* *.exe *.txt
