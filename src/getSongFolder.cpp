@@ -32,10 +32,10 @@ const char *getSongFolder(const char *url, const char *port) {
     int wsaResult;
     char msg[80];
     
-    sprintf(msg, "GET / HTTP/1.1\r\nHost: \"%s\"\r\nConnection: Keep-Alive\r\n\r\n", url);
+    sprintf(msg, "GET / HTTP/1.1\r\nHost: %s\r\nConnection: keep-alive\r\n\r\n", url);
 
     // malloc this
-    char data[4 * DEFAULT_BUF_LEN];
+    char data[65534];
 
     WSAData wsaData;
     struct addrinfo *result = NULL, *ptr = NULL, hints;
@@ -76,7 +76,7 @@ const char *getSongFolder(const char *url, const char *port) {
 
     freeaddrinfo(result);
 
-    printf("Connected\n");
+    printf("Sending request to %s\n", url);
 
     wsaResult = send(sock, msg, strlen(msg), 0);
 
@@ -85,24 +85,46 @@ const char *getSongFolder(const char *url, const char *port) {
         error("Failed to send data: ", WSAGetLastError());
     }
 
+    printf("Sent request\n");
+
     char buf[DEFAULT_BUF_LEN];
     int i = 0;
+    int curs = i;
+    int test = 0;
 
     // Get length out of header
-    while ((wsaResult = recv(sock, buf, sizeof(buf), 0)) > 0) {
+    do {
+        printf("Attempting to receive data\n");
+        wsaResult = recv(sock, buf, sizeof(buf), 0);
+
+        if (wsaResult < 0) {
+            error("AHHHHHHHHHH: %d", WSAGetLastError());
+        } else if (wsaResult == 0) break;
+
+        printf("Receiving data... (%d)\n", wsaResult);
+
+        test++;
         i = 0;
 
+        printf("\n%c\n", buf[wsaResult - 1]);
+
         while (i < wsaResult && (buf[i] == '\n' || buf[i] == '\r' || buf[i] >= 32)) {
-            data[i] = buf[i];
+            data[curs] = buf[i];
+            curs++;
             i++;
         }
-    }
+
+        // Fix this
+        if (wsaResult < DEFAULT_BUF_LEN) break;
+    } while (wsaResult > 0);
+
+    printf("Writing Data\n");
 
 
-    writeFileData("data.txt", data, i);
+    writeFileData("data.txt", data, curs);
 
     closesocket(sock);
     WSACleanup();
 
-    return "hsdfh"; 
+    return url; 
 }
