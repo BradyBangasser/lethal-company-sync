@@ -2,11 +2,11 @@ SRC_DIR := src
 OUT_DIR := out
 CC := gcc
 CXXC := g++
-GFLAGS := -O2 -Wall
+GFLAGS := -O2 -Wall -I include
 CFLAGS := 
 CPPFLAGS := 
-LFLAGS := -lws2_32 -static-libgcc -static-libstdc++ -static
-EXE := out
+LFLAGS := -lws2_32 -static-libgcc -static-libstdc++ -static -Llib -llibssl -llibcrypto
+EXE := lethal-sync.exe
 CPP_STD := 17
 C_STD := 11
 
@@ -28,3 +28,4 @@ $(OUT_DIR)/%.cpp.o: $(SRC_DIR)/%.cpp
 
 clean:
 	rm -rf out/* *.exe *.txt
+	clear

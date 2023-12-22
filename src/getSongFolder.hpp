@@ -5,6 +5,6 @@
 #define DEFAULT_SERVER_PORT "27015"
 #define DEFAULT_BUF_LEN 1024
 
-const char* getSongFolder(const char *url, const char *port = DEFAULT_SERVER_PORT);
+const char* getSongFolder(const char *url, const char *port);
 
 #endif
