@@ -9,4 +9,6 @@ int parseHeader(const char *stream, int streamLen, struct Header *header) {
     for (i = 0; i < streamLen; i++) {
         printf("%c", stream[i]);
     }   
+
+    return 0;
 }

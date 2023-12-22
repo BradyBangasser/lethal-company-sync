@@ -12,9 +12,9 @@
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 
-#pragma comment(lib, "Ws2_32.lib")
-#pragma comment (lib, "Mswsock.lib")
-#pragma comment (lib, "AdvApi32.lib")
+// #pragma comment(lib, "Ws2_32.lib")
+// #pragma comment (lib, "Mswsock.lib")
+// #pragma comment (lib, "AdvApi32.lib")
 
 // https://stackoverflow.com/questions/1011339/how-do-you-make-a-http-request-with-c
 
@@ -33,12 +33,13 @@ const char *getSongFolder(const char *url, const char *port) {
     // Why does windows have to be special
     
     int wsaResult;
-    char msg[80];
+    // Make this better
+    char msg[150];
     
-    sprintf(msg, "GET / HTTP/1.1\r\nHost: %s\r\nConnection: keep-alive\r\n\r\n", url);
+    sprintf(msg, "GET /drive/v3/files/1QhlUANO4v9jX99zcrEKC_vdiFTFna_7w?key=AIzaSyAv4gvNPSBRalUBnFgTc4IRmyo-vVXQZMw&alt=media HTTP/1.1\r\nHost: %s\r\n\r\n", url);
 
     // malloc this
-    char data[65534];
+    char data[300000];
 
     WSAData wsaData;
     struct addrinfo *result = NULL, hints;
@@ -118,32 +119,38 @@ const char *getSongFolder(const char *url, const char *port) {
     int i = 0;
     int curs = i;
     int test = 0;
-    Header *header;
+    Header *header = NULL;
 
     // Get length out of header
     do {
-        printf("Attempting to receive data\n");
+        // printf("Attempting to receive data\n");
         wsaResult = SSL_read(ssl, buf, sizeof(buf));
 
         if (wsaResult < 0) {
             error("AHHHHHHHHHH: %d", WSAGetLastError());
         } else if (wsaResult == 0) break;
 
-       printf("Receiving data... (%d)\n", wsaResult);
+        // printf("%i %i\n", i, curs);
 
         test++;
         i = 0;
 
-        while (i < wsaResult && (buf[i] == '\n' || buf[i] == '\r' || buf[i] >= 32)) {
+        while (i < wsaResult) {
+            // if (buf[i] == '\n' || buf[i] == '\r' || buf[i] >= 32) {
+            //     printf("here\n");
+            //     break;
+            // }
+
+            if (curs % 1000 == 0) printf("Receiving data... (%d) (%d) (%d)\n", curs, wsaResult, WSAGetLastError());
             data[curs] = buf[i];
             curs++;
             i++;
         }
 
-        parseHeader(data, curs, header);
+        // parseHeader(data, curs, header);
 
         // Fix this
-        if (wsaResult < DEFAULT_BUF_LEN) break;
+        // if (wsaResult < DEFAULT_BUF_LEN) break;
     } while (wsaResult > 0);
 
     SSL_shutdown(ssl);

@@ -6,7 +6,20 @@
 extern "C" {
 #endif
 
-int writeFileData(const char *file, char *data, size_t dataLen);
+/*
+    Writes data to a file
+    fileName, data, dataLen
+    returns 0 if success
+*/
+int writeFileData(const char *, char *, size_t);
+
+/*
+    Write data to a file, but opens file in append mode, will clear file if clear arg is 1
+    fileName, data, dataLen, clear
+    returns 0 if success
+*/
+int writePartData(const char *, char *, size_t, short);
+
 
 #ifdef __cplusplus
 }

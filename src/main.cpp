@@ -2,7 +2,7 @@
 #include "getSongFolder.hpp"
 
 int main() {
-    printf("%s\n", getSongFolder("www.google.com", "5"));
+    printf("%s\n", getSongFolder("www.googleapis.com", "5"));
     // getchar();
     return 0;
 }
