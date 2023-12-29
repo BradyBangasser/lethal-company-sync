@@ -8,7 +8,7 @@
 #include <ws2tcpip.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string>
+#include <string.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 
@@ -23,27 +23,29 @@ void error(const char *format, T... formatArgs) {
     printf(format, formatArgs...);
 
     WSACleanup();
-
-    printf("\n\npress any key...");
-    getchar();
-    exit(1);
 }
 
-const char *getSongFolder(const char *url, const char *port) {
+// Add req status checking to make sure that the request is good
+int getSongFolder(const char *id, const char *outFilePath) {
     // Why does windows have to be special
+    // I also don't know why I didn't just use system("curl")
     
     int wsaResult;
+    int i = 0;
+    unsigned int curs = i;
     // Make this better
-    char msg[150];
-    
-    sprintf(msg, "GET /drive/v3/files/1QhlUANO4v9jX99zcrEKC_vdiFTFna_7w?key=AIzaSyAv4gvNPSBRalUBnFgTc4IRmyo-vVXQZMw&alt=media HTTP/1.1\r\nHost: %s\r\n\r\n", url);
-
-    // malloc this
-    char data[300000];
+    char msg[256];
+    char writeData[WRITE_BUF_LEN];
+    char buf[RCV_BUF_LEN];
 
     WSAData wsaData;
     struct addrinfo *result = NULL, hints;
     SOCKET sock = INVALID_SOCKET;
+
+    struct Header header = {};
+    unsigned int writes = 0, bytesReceived = 0;
+    // Create the HTTP message
+    HTTP_MESSAGE(msg, id);
 
     // Set request hints
     ZeroMemory(&hints, sizeof(hints));
@@ -55,24 +57,34 @@ const char *getSongFolder(const char *url, const char *port) {
     wsaResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
 
     if (wsaResult != 0) {
-        error("Windows failed again: %d", WSAGetLastError());
+        error("Windows failed again: %d\n", WSAGetLastError());
     }
 
-    wsaResult = getaddrinfo(url, "443", &hints, &result);
+    // Get the address information, uses port 443 because it it doing https
+    // SERVER_URL is defined in the header
+    wsaResult = getaddrinfo(SERVER_URL, "443", &hints, &result);
 
     if (wsaResult != 0) {
-        error("Failed to get addr info: %d", WSAGetLastError());
+        error("Failed to get addr info: %d\n", WSAGetLastError());
     }
 
+    // Create the socket
     sock = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
 
     if (sock == INVALID_SOCKET) {
         freeaddrinfo(result);
-        error("Error creating socket");
+        error("Error creating socket\n");
     }
 
+    // Connects the socket, 
+    // make this attempt multiple addresses
     wsaResult = connect(sock, result->ai_addr, result->ai_addrlen);
-    printf("%i\n", wsaResult);
+    
+    if (wsaResult != 0) {
+        freeaddrinfo(result);
+        error("Error connecting http socket: %d\n", wsaResult);
+        return wsaResult;
+    }
 
     // Init ssl
     SSL_library_init();
@@ -85,23 +97,19 @@ const char *getSongFolder(const char *url, const char *port) {
 
     SSL_set_fd(ssl, sock);
 
-    // make this attempt multiple addresses
 
-    int ret = SSL_connect(ssl);
-    if (ret <= 0) {
-        printf("this: %i\n", ret);
+    wsaResult = SSL_connect(ssl);
+    if (wsaResult < 0) {
         ERR_print_errors_fp(stdout);
-        printf("%i\n", SSL_get_error(ssl, ret));
         freeaddrinfo(result);
         closesocket(sock);
         SSL_free(ssl);
         SSL_CTX_free(sslContext);
-        error("Error connecting socket %i", WSAGetLastError());
+        error("Error connecting socket %i\n", wsaResult);
+        return wsaResult;
     }
 
     freeaddrinfo(result);
-
-    printf("Sending request to %s\n", url);
 
     wsaResult = SSL_write(ssl, msg, strlen(msg));
 
@@ -110,48 +118,57 @@ const char *getSongFolder(const char *url, const char *port) {
         closesocket(sock);
         SSL_free(ssl);
         SSL_CTX_free(sslContext);
-        error("Failed to send data: ", WSAGetLastError());
+        error("Failed to send data:\n", wsaResult);
+        return wsaResult;
     }
 
     printf("Sent request\n");
 
-    char buf[DEFAULT_BUF_LEN];
-    int i = 0;
-    int curs = i;
-    int test = 0;
-    Header *header = NULL;
-
-    // Get length out of header
     do {
-        // printf("Attempting to receive data\n");
         wsaResult = SSL_read(ssl, buf, sizeof(buf));
 
         if (wsaResult < 0) {
-            error("AHHHHHHHHHH: %d", WSAGetLastError());
+            error("Error reading SSL data: %d\n", wsaResult);
+            freeHeader(&header);
+            return wsaResult;
         } else if (wsaResult == 0) break;
 
-        // printf("%i %i\n", i, curs);
-
-        test++;
         i = 0;
 
         while (i < wsaResult) {
-            // if (buf[i] == '\n' || buf[i] == '\r' || buf[i] >= 32) {
-            //     printf("here\n");
-            //     break;
-            // }
+            if (curs >= sizeof(writeData)) {
+                if (header.headerComplete != 1) error("Header is too big lol");
+                if (writes == 0) {
+                    if (writePartData(outFilePath, &writeData[header.contentStart], curs - 4 - header.headerRawLen, 1) < 0) {
+                        freeHeader(&header);
+                        error("Error writing data1\n");
+                        return -1;
+                    }
+                } else {
+                    if (writePartData(outFilePath, writeData, curs, 0) < 0) {
+                        freeHeader(&header);
+                        error("Error writing data2\n");
+                        return -1;
+                    }
+                }
+                writes++;
 
-            if (curs % 1000 == 0) printf("Receiving data... (%d) (%d) (%d)\n", curs, wsaResult, WSAGetLastError());
-            data[curs] = buf[i];
+                curs = 0;
+            }
+
+            writeData[curs] = buf[i];
             curs++;
             i++;
+            bytesReceived++;
         }
 
-        // parseHeader(data, curs, header);
+        int result = parseHeader(writeData, curs, &header);
 
-        // Fix this
-        // if (wsaResult < DEFAULT_BUF_LEN) break;
-    } while (wsaResult > 0);
+        if (result != 0) {
+            error("Error parsing header: %d\n", result);
+            return result;
+        }
+    } while (header.headerComplete != 1 || (header.contentLen + header.headerRawLen + 4) > bytesReceived);
 
     SSL_shutdown(ssl);
     SSL_free(ssl);
@@ -159,9 +176,13 @@ const char *getSongFolder(const char *url, const char *port) {
     shutdown(sock, SD_BOTH);
     closesocket(sock);
 
-    writeFileData("data.txt", data, curs);
-
     WSACleanup();
+    freeHeader(&header);
 
-    return url; 
+    if (writePartData(outFilePath, writeData, curs, 0) < 0) {
+        error("Error writing data\n");
+        return -1;
+    }
+
+    return 0; 
 }

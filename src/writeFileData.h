@@ -9,14 +9,14 @@ extern "C" {
 /*
     Writes data to a file
     fileName, data, dataLen
-    returns 0 if success
+    returns -1 or the number of bits written 
 */
 int writeFileData(const char *, char *, size_t);
 
 /*
     Write data to a file, but opens file in append mode, will clear file if clear arg is 1
     fileName, data, dataLen, clear
-    returns 0 if success
+    returns -1 or the number of bytes written
 */
 int writePartData(const char *, char *, size_t, short);
 

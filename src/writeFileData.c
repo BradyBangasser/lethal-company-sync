@@ -3,15 +3,16 @@
 #include <stddef.h>
 
 int writeFileData(const char *file, char *data, size_t dataLen) {
-    printf("Writing Data (%lld bytes)\n", dataLen);
-    FILE *f = fopen(file, "w");
-
-    fwrite(data, 1, dataLen, f);
-
-    fclose(f);
-    return 0;
+    return writePartData(file, data, dataLen, 1);
 }
 
 int writePartData(const char *file, char *data, size_t dataLen, short clear) {
-    return 1;
+    printf("Writing %lld bytes to %s\n", dataLen, file);
+    FILE *f = fopen(file, (clear == 1) ? "wb" : "ab");
+
+    size_t written = fwrite(data, 1, dataLen, f);
+
+    fclose(f);
+
+    return written;
 }
