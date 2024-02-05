@@ -79,7 +79,7 @@ int getSongFolder(const char *id, const char *outFilePath) {
     // Connects the socket, 
     // make this attempt multiple addresses
     wsaResult = connect(sock, result->ai_addr, result->ai_addrlen);
-    
+
     if (wsaResult != 0) {
         freeaddrinfo(result);
         error("Error connecting http socket: %d\n", wsaResult);

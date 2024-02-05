@@ -1,5 +1,5 @@
 SRC_DIR := src
-VERSION := 1.0.0
+VERSION := 1.0.1
 OUT_DIR := out
 LIB_DIR := lib
 CC := gcc
