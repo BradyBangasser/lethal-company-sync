@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 
+// This represents the .modpack.lcs file
 class ModPack {
     private:
         std::string name;
