@@ -4,6 +4,7 @@
         "winsock2.h": "c",
         "ws2tcpip.h": "c",
         "writefiledata.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "sha.h": "c"
     }
 }

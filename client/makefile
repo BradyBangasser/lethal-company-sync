@@ -21,12 +21,13 @@ CC := gcc
 FC := gfortran
 ASMC := as
 
-LD_FLAGS := -Llib -lssl -lcrypto -static -static-libgcc -static-libstdc++ -lz -lws2_32 -lcrypt32 -lunzip
+LD_FLAGS := 
 G_FLAGS := -Wall
 CXX_FLAGS :=
 C_FLAGS :=
 F_FLAGS :=
 ASM_FLAGS :=
+
 CXX_STD := 17
 C_STD := 11
 
@@ -71,16 +72,16 @@ $(OUT)/%.f.o: $(SRC)/%.f | $(OUT)
 $(foreach mod,$(MODULES),$(eval $(call FILE_RECIPE,$(mod),f,$(F_FLAGS),$(FC))))
 
 $(OUT)/%.cpp.o: $(SRC)/%.cpp | $(OUT)
-	$(CXX) -c -o $@ $< $(CXX_FLAGS)
-$(foreach mod,$(MODULES),$(eval $(call FILE_RECIPE,$(mod),cpp,$(CXX_FLAGS),$(CXX))))
+	$(CXX) -c -o $@ $< $(CXX_FLAGS) -std=c++$(CXX_STD)
+$(foreach mod,$(MODULES),$(eval $(call FILE_RECIPE,$(mod),cpp,$(CXX_FLAGS) -std=c++$(CXX_STD),$(CXX))))
 
 $(OUT)/%.asm.o: $(SRC)/%.asm | $(OUT)
 	$(ASM) -c -o $@ $< $(ASM_FLAGS)
 $(foreach mod,$(MODULES),$(eval $(call FILE_RECIPE,$(mod),asm,$(ASM_FLAGS),$(ASM))))
 
 $(OUT)/%.c.o: $(SRC)/%.c | $(OUT)
-	$(CC) -c -o $@ $< $(C_FLAGS)
-$(foreach mod,$(MODULES),$(eval $(call FILE_RECIPE,$(mod),c,$(C_FLAGS),$(CC))))
+	$(CC) -c -o $@ $< $(C_FLAGS) -std=c$(C_STD)
+$(foreach mod,$(MODULES),$(eval $(call FILE_RECIPE,$(mod),c,$(C_FLAGS) -std=c$(C_STD),$(CC))))
 
 .PHONY: build clean
 

@@ -2,7 +2,6 @@
 #include "modpack.hpp"
 
 int main() {
-    printf("Hello World\n");
-    ModPack mp;
+    ModPack mp("yo", "hi");
     return 0;
 }

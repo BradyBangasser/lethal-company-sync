@@ -1,0 +1,13 @@
+/v1 {
+    /mod {
+        METHOD get
+        METHOD post
+        /verify
+    }
+
+    /mods {
+        METHOD get
+        METHOD post 
+        /verify
+    }
+}

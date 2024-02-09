@@ -1,0 +1,2 @@
+Game Id: $(Hex int, int determined by server when re)
+Mod Id: $(gameId):$(Base64 SHA-224 of the name of the mod)
