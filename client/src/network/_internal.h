@@ -1,11 +1,11 @@
 #ifndef NETWORK_INTERNAL_H
 #define NETWORK_INTERNAL_H
 
-#ifdef c_plus_plus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
-#ifdef c_plus_plus
+#ifdef __cplusplus
 }
 #endif
 

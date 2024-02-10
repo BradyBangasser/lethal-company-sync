@@ -3,7 +3,7 @@
 #include <vector>
 #include <iostream>
 
-ModPack::ModPack(std::string name, const std::string gameId, const std::vector<const std::string> modIds) {
+ModPack::ModPack(std::string name, const std::string gameId, const std::vector<std::string> modIds) {
     this->name = name;
     *const_cast<std::string *>(&(this->gameId)) = gameId;
 

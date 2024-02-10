@@ -5,7 +5,7 @@
 #include <vector>
 namespace network {
     int verifyMod(const std::string id);
-    int verifyMod(const std::vector<const std::string>);
+    int verifyMod(const std::vector<std::string>);
 }
 // Caching needed
 

@@ -21,8 +21,8 @@ CC := gcc
 FC := gfortran
 ASMC := as
 
-LD_FLAGS := 
-G_FLAGS := -Wall
+LD_FLAGS := -lcrypto
+G_FLAGS := -Wall -O3
 CXX_FLAGS :=
 C_FLAGS :=
 F_FLAGS :=
