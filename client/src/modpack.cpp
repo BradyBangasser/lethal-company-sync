@@ -10,7 +10,7 @@ ModPack::ModPack(std::string name, const std::string gameId, const std::vector<s
     
     
     
-    for (const std::string id : modIds) {
+    for (const std::string &id : modIds) {
         this->modIds.push_back(id);
     }
 

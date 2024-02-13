@@ -21,8 +21,8 @@ CC := gcc
 FC := gfortran
 ASMC := as
 
-LD_FLAGS := -lcrypto
-G_FLAGS := -Wall -O3
+LD_FLAGS := -lcrypto -Llib -lblib -lssl -lcrypto -lcrypt32 -lWs2_32
+G_FLAGS := -Wall -O3 -I include
 CXX_FLAGS :=
 C_FLAGS :=
 F_FLAGS :=
@@ -68,19 +68,19 @@ clean:
 	rm -rf $(EXE) $(OUT)
 
 $(OUT)/%.f.o: $(SRC)/%.f | $(OUT)
-	$(FC) -c -o $@ $< $(F_FLAGS)
+	$(FC) -c -o $@ $< $(F_FLAGS) $(G_FLAGS)
 $(foreach mod,$(MODULES),$(eval $(call FILE_RECIPE,$(mod),f,$(F_FLAGS),$(FC))))
 
 $(OUT)/%.cpp.o: $(SRC)/%.cpp | $(OUT)
-	$(CXX) -c -o $@ $< $(CXX_FLAGS) -std=c++$(CXX_STD)
+	$(CXX) -c -o $@ $< $(CXX_FLAGS) -std=c++$(CXX_STD) $(G_FLAGS)
 $(foreach mod,$(MODULES),$(eval $(call FILE_RECIPE,$(mod),cpp,$(CXX_FLAGS) -std=c++$(CXX_STD),$(CXX))))
 
 $(OUT)/%.asm.o: $(SRC)/%.asm | $(OUT)
-	$(ASM) -c -o $@ $< $(ASM_FLAGS)
+	$(ASM) -c -o $@ $< $(ASM_FLAGS) $(G_FLAGS)
 $(foreach mod,$(MODULES),$(eval $(call FILE_RECIPE,$(mod),asm,$(ASM_FLAGS),$(ASM))))
 
 $(OUT)/%.c.o: $(SRC)/%.c | $(OUT)
-	$(CC) -c -o $@ $< $(C_FLAGS) -std=c$(C_STD)
+	$(CC) -c -o $@ $< $(C_FLAGS) -std=c$(C_STD) $(G_FLAGS)
 $(foreach mod,$(MODULES),$(eval $(call FILE_RECIPE,$(mod),c,$(C_FLAGS) -std=c$(C_STD),$(CC))))
 
 .PHONY: build clean

@@ -3,18 +3,11 @@
 #include "util/utils.h"
 #include "network/network.hpp"
 #include <cstdint>
+#include <http.hpp>
+#include "constants.hpp"
 
 int main() {
-    const std::string msg = "zbhipqvoscpkqaxufrulcgsxjuvipywjyxrenwqfzujtirvwmgioaltiewsynwfdmkdsswlleqmvweoamuwwstlyrgqqvdkwalansjzhnievsqzxuvanwedazvvffzjtamfoiflniltrekdhafrgbiyadolgzbrmdmbxyuwlywvvwixphlnofgigzsjqxqswifctfvd";
-    uint8_t buffer[64];
-    uint32_t i;
-    sha224(buffer, msg.c_str(), &i);
-
-    for (int j = 0; j < i; j++) {
-        printf("%02x ", buffer[j]);
-    }
-
-    printf("\n");
-
+    const struct blib_http::Response res = blib_http::request<const blib_http::Response>(serverUrl("/mod/"), NULL);
+    printf("%i %s\n", res.status, res.content.c_str());
     return 0;
 }

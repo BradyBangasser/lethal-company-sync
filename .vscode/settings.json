@@ -5,6 +5,7 @@
         "ws2tcpip.h": "c",
         "writefiledata.h": "c",
         "stdlib.h": "c",
-        "sha.h": "c"
+        "sha.h": "c",
+        "vector": "cpp"
     }
 }

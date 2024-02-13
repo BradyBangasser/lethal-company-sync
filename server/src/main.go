@@ -1,9 +1,14 @@
 package main
 
 import (
-	"fmt"
+	"github.com/gin-gonic/gin"
+	"lsc.bangasser.dev/src/routes"
 )
 
 func main() {
-	fmt.Printf("%06x", 5)
+	engine := gin.Default()
+
+	routes.CreateRouter(engine)
+
+	engine.Run()
 }

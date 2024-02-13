@@ -102,7 +102,6 @@ def createRouter(routeList: list, initalPath="/", parentVariable="r", n=False):
                     continue
 
                 sp = "/" + path.basename(subroute)  # sub path path
-
                 routev = sp
 
                 if re.match(r"__.*__", subroute):
@@ -111,13 +110,14 @@ def createRouter(routeList: list, initalPath="/", parentVariable="r", n=False):
                 routerLines.append(
                     f'{spv} := {parentVariable}.Group("{routev}"); ' + "{"
                 )
-                routerLines += createRouter(route[subroute], sp, spv, True)
+                routerLines += createRouter(route[subroute], path.join(initalPath, subroute).replace("\\", "/"), spv, True)
                 routerLines.append("}")
         elif type(route) == str:
             routeMethod = route.replace(".go", "").upper()
 
             importVar = ""
             if n:
+                print(initalPath)
                 importVar = re.sub(
                     r"[/]", "_", f"{ROUTES_PATH}{re.sub(r'-', '', initalPath)}."
                 )
@@ -145,6 +145,7 @@ def createRouter(routeList: list, initalPath="/", parentVariable="r", n=False):
 
 
 goFiles: list = getFiles()
+print(goFiles)
 
 if BUILD_FILE_NAME in goFiles:
     goFiles.remove(BUILD_FILE_NAME)

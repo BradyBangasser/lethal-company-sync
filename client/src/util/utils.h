@@ -23,6 +23,9 @@ unsigned char *base64Decode(const unsigned char *src, size_t len, size_t *outLen
 
 int hash(const EVP_MD *algorithm, uint8_t *buffer, const char *msg, uint32_t *hashLen);
 
+/*
+    Uses the sha224 algorithm to hash a msg, buffer should be 28 characters long
+*/
 inline int sha224(uint8_t *buffer, const char *msg, uint32_t *hashLen) { return hash(EVP_sha224(), buffer, msg, hashLen); };
 
 #ifdef __cplusplus
