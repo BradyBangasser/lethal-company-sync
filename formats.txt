@@ -1,2 +1,2 @@
-Game Id: $(Hex int, unsigned int determined by server when regestering a game)
-Mod Id: $(gameId):$(hex SHA-224 of the name of the mod)
+Game Id: $(Hex int (6 char), unsigned int determined by server when regestering a game)
+Mod Id: $(gameId):$(hex SHA-224 (56 char) of the name of the mod)

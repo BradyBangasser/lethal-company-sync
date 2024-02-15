@@ -28,8 +28,8 @@ C_FLAGS :=
 F_FLAGS :=
 ASM_FLAGS :=
 
-CXX_STD := 17
-C_STD := 11
+CXX_STD := 23
+C_STD := 17
 
 GET_SRCS = $(wildcard $(SRC)/*.$1) $(wildcard $(SRC)/*/*.$1)
 GET_OBJS = $(foreach file,$(patsubst $(SRC)/%, %, $1),$(patsubst %,$(OUT)/%.o,$(subst $(SPACE),.,$(call REVERSE,$(subst /, ,$(word 1,$(subst ., ,$(file))))) $(word 2,$(subst ., ,$(file))))))

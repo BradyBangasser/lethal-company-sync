@@ -16,6 +16,7 @@ type Mod struct {
 	Version     string `json:"v" xml:"Version"`
 	UploadTimeStamp time.Time `json:"ts" xml:"TimeStamp"`
 	Id string `json:"id" xml:"Id"`
+	Hash string `json:"hash" xml:"Hash"`
 }
 
 func generateModId(gameId string, name string) string {

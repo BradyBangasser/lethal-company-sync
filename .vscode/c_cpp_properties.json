@@ -12,8 +12,8 @@
             ],
             "windowsSdkVersion": "10.0.19041.0",
             "compilerPath": "C:/Strawberry/c/bin/g++",
-            "cStandard": "c23",
-            "cppStandard": "c++17",
+            "cStandard": "c17",
+            "cppStandard": "c++23",
             "intelliSenseMode": "windows-gcc-x64"
         }
     ],

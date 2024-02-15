@@ -3,10 +3,27 @@
 
 #include <string>
 #include <vector>
+
 namespace network {
-    int verifyMod(const std::string id);
-    int verifyMod(const std::vector<std::string>);
-    int fetchMod(const std::string id);
+
+    class NetworkError : public std::exception {
+        private:
+            std::string msg;
+            int code;
+        public:
+            NetworkError() = delete;
+            NetworkError(int code, std::string msg);
+            const char *what();
+    };
+
+    int verifyMod(const std::string id) noexcept;
+    const std::vector<std::string> verifyMod(const std::vector<std::string>);
+    int checkVersion();
+
+    /*
+        Attempts to fetch the mod JSON from 
+    */
+    std::string fetchMod(const std::string id);
 }
 // Caching needed
 

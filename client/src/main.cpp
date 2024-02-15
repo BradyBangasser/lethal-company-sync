@@ -5,9 +5,12 @@
 #include <cstdint>
 #include <http.hpp>
 #include "constants.hpp"
+#include "mod/mod.hpp"
+#include "fs/files.hpp"
 
 int main() {
-    const struct blib_http::Response res = blib_http::request<const blib_http::Response>(serverUrl("/mod/"), NULL);
-    printf("%i %s\n", res.status, res.content.c_str());
+    checkSystemFiles();
+    checkSystemFiles();
+    checkSystemFiles();
     return 0;
 }
