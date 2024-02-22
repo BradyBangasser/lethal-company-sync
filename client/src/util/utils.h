@@ -28,6 +28,9 @@ int hash(const EVP_MD *algorithm, uint8_t *buffer, const char *msg, uint32_t *ha
 */
 inline int sha224(uint8_t *buffer, const char *msg, uint32_t *hashLen) { return hash(EVP_sha224(), buffer, msg, hashLen); };
 
+// String stuff
+uint32_t countCharacters(const char *str, char c);
+
 #ifdef __cplusplus
 }
 #endif

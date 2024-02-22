@@ -3,6 +3,11 @@
 
 #define LCS_VERSION "0.1"
 
+// ____Id Stuff____
+#define LCS_GID_LENGTH 6
+#define LCS_MID_LENGTH 56
+#define LCS_MPID_LENGTH 8
+
 // ____C Return Types____
 #define LCS_NOT_IMPLEMENTED_YET -99999
 #define LCS_OK 1

@@ -30,5 +30,5 @@ int hash(const EVP_MD *algorithm, uint8_t *buffer, const char *msg, uint32_t *ha
         return ALGORITHM_FINAL_ERROR;
     }
 
-    return OK;
+    return LCS_OK;
 }

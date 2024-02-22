@@ -69,13 +69,16 @@ class Mod {
             Parses the Mod from JSON
             @param json The JSON
         */
-        static Mod parse(std::string json);
+        static Mod parseJson(std::string json);
 
         /**
             Attempts to fetch a mod from the server, it does NOT download the mod
             @param id The Mod's id
         */
         static Mod fetch(std::string id);
+
+        static Mod fromModFile(std::string path);
+        static Mod fromGameFileLine(std::string line);
         static inline bool verify(std::string id) { return verifyId(id) && network::verifyMod(id) == 0; }
 };
 

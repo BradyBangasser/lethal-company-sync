@@ -34,7 +34,7 @@ Mod::Mod(const std::string id, const std::string name, const std::string downloa
     this->installed = false;
 }
 
-Mod Mod::parse(std::string jsonString) {
+Mod Mod::parseJson(std::string jsonString) {
     std::string name, id, downloadUrl, version, description, hash;
     std::chrono::system_clock::time_point timeStamp;
 
@@ -57,6 +57,10 @@ Mod Mod::parse(std::string jsonString) {
 }
 
 Mod Mod::fetch(std::string id) {
+
+    
+
+
     std::string res;
 
     try {
@@ -66,7 +70,7 @@ Mod Mod::fetch(std::string id) {
         throw ;
     }
 
-    return parse(res);
+    return parseJson(res);
 }
 
 ModStatus Mod::check() {

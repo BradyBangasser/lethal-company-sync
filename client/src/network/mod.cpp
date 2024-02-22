@@ -10,12 +10,12 @@ bool verifyIdFormat() {
 
 int network::verifyMod(const std::string id) noexcept {
 
-    return NOT_IMPLEMENTED_YET;
+    return LCS_NOT_IMPLEMENTED_YET;
 } // verifyMod
 
 const std::vector<std::string> network::verifyMod(const std::vector<std::string> mods) {
 
-    throw NOT_IMPLEMENTED_YET;
+    throw LCS_NOT_IMPLEMENTED_YET;
 } // verifyMod
 
 std::string network::fetchMod(const std::string id) {

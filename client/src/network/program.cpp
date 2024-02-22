@@ -2,5 +2,5 @@
 #include "../constants.hpp"
 
 int network::checkVersion() {
-    return NOT_IMPLEMENTED_YET;
+    return LCS_NOT_IMPLEMENTED_YET;
 }
