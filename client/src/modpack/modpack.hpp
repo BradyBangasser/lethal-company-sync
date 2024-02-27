@@ -15,6 +15,7 @@ class ModPack {
         int revisionNumber;
         bool unsavedChanges;
         bool inited;
+        std::string profile;
     
     public:
         ModPack();

@@ -50,7 +50,7 @@ func generateDebugMods(games []Game, num int) []Mod {
 		m = append(m, Mod{
 			Name: name,
 			Description: "Description",
-			DownloadUrl: "Download URL",
+			DownloadUrl: "http://849f90976f6f2afae5fb990635c67915.serveo.net/mod/000069:92038414a8a21b3f98b2a08c55e0201e9a7ebe8ac75d73dcee242f82/download/",
 			Version: "1.0.0",
 			UploadTimeStamp: time.Now(),
 			Id: generateModId(game.Id, name),

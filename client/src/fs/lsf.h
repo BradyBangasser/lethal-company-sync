@@ -13,6 +13,7 @@ struct LSFValue {
 
 struct LSFValue *parseLSFFile(const char *path, int *len);
 struct LSFValue *parseLSFString(const char *str, int *len);
+struct LSFValue *createLSFValue(const char *key, const char *val);
 void freeLSFValues(struct LSFValue *values);
 int appendLSFValue(struct LSFValue *values, const char *key, const char *value);
 int writeLSFFile(const char *path, const struct LSFValue *values);

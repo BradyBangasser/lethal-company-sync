@@ -5,12 +5,6 @@
 #include "../network/network.hpp"
 #include <chrono>
 
-enum ModStatus {
-    ALL_GOOD,
-    OUT_OF_DATE,
-    CORRUPT,
-    NOT_INSTALLED
-};
 
 // THIS WILL NEED TO CHECK HASHES
 
@@ -31,7 +25,6 @@ class Mod {
         std::chrono::system_clock::time_point updated;
         size_t unzippedSize;
         size_t zippedSize;
-        bool installed;
         std::string installPath;
 
         Mod(const std::string id, const std::string name, const std::string downloadUrl, const std::string version, const std::string description, const std::chrono::system_clock::time_point timeStamp, const std::string hash);
@@ -39,6 +32,16 @@ class Mod {
         static bool verifyId(std::string id);
     
     public:
+        enum ModStatus {
+            // For general use
+            ALL_GOOD,
+            // For checking mods
+            OUT_OF_DATE,
+            CORRUPT,
+            NOT_INSTALLED,
+            // For installs
+            ALREADY_INSTALLED
+        };
 
         inline const std::string getId() { return this->id; }
         inline const std::string getName() { return this->name; }
@@ -47,10 +50,14 @@ class Mod {
         inline const std::string getDescription() { return this->name; }
 
         /**
-            @param path path of the download
-        */
-        std::string download(std::string path);
+         * @brief Downloads the 
+         * 
+         * @param path 
+         * @return int 
+         */
+        ModStatus download(const std::string path);
 
+        ModStatus install();
         /**
             Checks the mods version and hash with the server to see if the mod is corrupt or there is a new version
             @returns a @ref ModStatus
@@ -72,10 +79,10 @@ class Mod {
         static Mod parseJson(std::string json);
 
         /**
-            Attempts to fetch a mod from the server, it does NOT download the mod
+            Attempts to fetch mod infomation from the server, it does NOT download the mod
             @param id The Mod's id
         */
-        static Mod fetch(std::string id);
+        static Mod fetch(std::string id, bool force = false);
 
         static Mod fromModFile(std::string path);
         static Mod fromGameFileLine(std::string line);

@@ -9,6 +9,7 @@
 #include <limits.h>
 #include "fs/lsf.h"
 
+// This verified that all of the required folders and files exist
 int init() {
     checkAndInstallSystemFiles();
     return 0;
@@ -16,20 +17,8 @@ int init() {
 
 int main() {
     init();
-    int len;
+    Mod mod = Mod::fetch("000069:92038414a8a21b3f98b2a08c55e0201e9a7ebe8ac75d73dcee242f82");
 
-    std::string test = "swhsadfgh: sadhfg\nhello: yo";
-    
-    struct LSFValue *vals = parseLSFString(test.c_str(), &len);
-
-    // struct LSFValue *vals = parseLSFFile("test.lsf", &len);
-
-    // printf("%x %s %s %s\n", vals, vals->next->key, vals->key, vals->value);
-
-    // writeLSFFile("test0.lsf", vals);
-    // printf("%x\n", vals);
-    // appendLSFValue(vals, "there", "value");
-    // writeLSFFile("test.lsf", vals);
-    // freeLSFValues(vals);
+    mod.install();
     return 0;
 }

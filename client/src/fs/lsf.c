@@ -52,7 +52,7 @@ struct LSFValue *_parseLSFLine(const char *line, struct LSFValue *prev) {
 }
 
 struct LSFValue *parseLSFFile(const char *path, int *len) {
-    char buf[1024] = { 0 }, *ret = 1;
+    char buf[1024] = { 0 }, *ret = (char *) 1;
     FILE *f = fopen(path, "r");
     struct LSFValue *values = NULL, *curs = NULL;
 
@@ -83,8 +83,8 @@ struct LSFValue *parseLSFFile(const char *path, int *len) {
 
 // Rewrite to use _parseLSFLine
 struct LSFValue *parseLSFString(const char *str, int *len) {
-    char *tok, *strc, *ret;
-    struct LSFValue *values = NULL, *curs = NULL;
+    char *tok, *strc;
+    struct LSFValue *values = NULL, *curs = NULL, *ret = NULL;
     size_t l;
 
     l = strlen(str);
@@ -120,6 +120,40 @@ struct LSFValue *parseLSFString(const char *str, int *len) {
     return values;
 }
 
+struct LSFValue *createLSFValue(const char *key, const char *val) {
+    size_t l;
+
+    struct LSFValue *builder = malloc(sizeof(struct LSFValue));
+    if (builder == NULL) {
+        return NULL;
+    }
+
+    l = strlen(key);
+    builder->key = malloc((l + 1) * sizeof(char));
+
+    if (builder->key == NULL) {
+        free(builder);
+        return NULL;
+    }
+
+    strcpy(builder->key, key);
+
+    l = strlen(val);
+    builder->value = malloc((l + 1) * sizeof(char));
+
+    if (builder->value == NULL) {
+        free(builder->key);
+        free(builder);
+        return NULL;
+    }
+
+    strcpy(builder->value, val);
+
+    builder->next = NULL;
+
+    return builder;
+}
+
 int appendLSFValue(struct LSFValue *lsfValues, const char *key, const char *value) {
     struct LSFValue *curs, *builder;
     size_t l;
@@ -151,6 +185,10 @@ int appendLSFValue(struct LSFValue *lsfValues, const char *key, const char *valu
     strcpy(builder->value, value);
 
     builder->next = NULL;
+
+    if (lsfValues == NULL) {
+        lsfValues = builder;
+    }
 
     curs = lsfValues;
     while (curs->next != NULL) {

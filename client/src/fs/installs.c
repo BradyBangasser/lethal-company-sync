@@ -13,12 +13,12 @@ static int systemFilesVerified = 0;
 /**
  * @brief Checks if a folder exists, if it doesn't, it creates it
  * 
- * @param subpath subpath of the folder in question, it will be appended to @ref PROGRAM_FILES
+ * @param subpath subpath of the folder in question, it will be appended to @ref LCS_PROGRAM_FILES
  * @return 1 if error, 0 if ok
  */
-int _verifyFolder(const char *subpath) {
+static inline int _verifyFolder(const char *subpath) {
     static char path[PATH_MAX];
-    sprintf(path, "%s\\%s", PROGRAM_FILES, subpath);
+    sprintf(path, "%s\\%s", LCS_PROGRAM_FILES, subpath);
     
     struct stat s = {0};
     if (stat(path, &s) == -1) {
@@ -36,13 +36,13 @@ int checkAndInstallSystemFiles() {
     struct stat s = {0};
     char infoPath[PATH_MAX];
 
-    sprintf(infoPath, "%s\\%s", PROGRAM_FILES, "info.lsf");
+    sprintf(infoPath, "%s\\%s", LCS_PROGRAM_FILES, LCS_INFO_FILE);
 
     // Verify folder will check if the folder exists and create it otherwise, returns 0 on success 1 on error
     if (_verifyFolder("")) return -1;
-    if (_verifyFolder("tmp")) return -1;
-    if (_verifyFolder("cache")) return -1;
-    if (_verifyFolder(INSTALLS_FOLDER)) return -1;
+    if (_verifyFolder(LCS_TMP_FOLDER)) return -1;
+    if (_verifyFolder(LCS_CACHE_FOLDER)) return -1;
+    if (_verifyFolder(LCS_INSTALLS_FOLDER)) return -1;
 
     if (stat(infoPath, &s) == -1) {
         if (mkInfo(infoPath) != 0) return -1;
@@ -72,7 +72,7 @@ int checkInstall(const char *id, char *path) {
 
     if (len == LCS_GID_LENGTH) {
         strncpy(gameId, id, LCS_GID_LENGTH);
-        sprintf(path, "%s\\%s\\%s\\%s", PROGRAM_FILES, INSTALLS_FOLDER, id, GAME_FILE);
+        sprintf(path, "%s\\%s\\%s\\%s", LCS_PROGRAM_FILES, LCS_INSTALLS_FOLDER, id, LCS_GAME_FILE);
         
         if (stat(path, &s) == -1) return -1;
         else return 0;
@@ -81,7 +81,7 @@ int checkInstall(const char *id, char *path) {
 
         strncpy(gameId, id, LCS_GID_LENGTH);
         strncpy(midPath, id + 1 + LCS_GID_LENGTH, LCS_MID_LENGTH);
-        snprintf(path, PATH_MAX, "%s\\%s\\%s\\%s\\%s.mod.lsf", PROGRAM_FILES, INSTALLS_FOLDER, gameId, "mods", midPath);
+        snprintf(path, PATH_MAX, "%s\\%s\\%s\\%s\\%s.mod.lsf", LCS_PROGRAM_FILES, LCS_INSTALLS_FOLDER, gameId, "mods", midPath);
 
         if (stat(path, &s) == -1) return -1;
         else return 0;
@@ -90,7 +90,7 @@ int checkInstall(const char *id, char *path) {
 
         strncpy(gameId, id, LCS_GID_LENGTH);
         strncpy(midPath, id + 1 + LCS_GID_LENGTH, LCS_MPID_LENGTH);
-        snprintf(path, PATH_MAX, "%s\\%s\\%s\\%s\\%s.modpack.lsf", PROGRAM_FILES, INSTALLS_FOLDER, gameId, "packs", midPath);
+        snprintf(path, PATH_MAX, "%s\\%s\\%s\\%s\\%s.modpack.lsf", LCS_PROGRAM_FILES, LCS_INSTALLS_FOLDER, gameId, "packs", midPath);
 
         if (stat(path, &s) == -1) return -1;
         else return 0;
@@ -116,7 +116,7 @@ int installGameByPath(const char *path, const char *gameFileContents) {
         if (mkdir(path) != 0) return -1;
 
         // .game.lcs folder
-        snprintf(fpath, PATH_MAX, "%s\\%s", path, GAME_FILE);
+        snprintf(fpath, PATH_MAX, "%s\\%s", path, LCS_GAME_FILE);
 
         FILE *gameFile = fopen(fpath, "w");
         if (gameFile == NULL) {

@@ -3,10 +3,7 @@
 
 #include <limits.h>
 #include <stdio.h>
-
-#define PROGRAM_FILES "C:\\lcs"
-#define INSTALLS_FOLDER "installs"
-#define GAME_FILE ".game.lcs"
+#include "../constants.hpp"
 
 #ifdef __cplusplus
 // CPP specific definitions 
@@ -53,7 +50,7 @@ int installGameByPath(const char *path, const char *gameFileContents);
  */
 static inline int installGame(const char *gid, const char *gameFileContents) {
     char path[PATH_MAX] = {0};
-    snprintf(path, PATH_MAX, "%s\\%s\\%s", PROGRAM_FILES, INSTALLS_FOLDER, gid);
+    snprintf(path, PATH_MAX, "%s\\%s\\%s", LCS_PROGRAM_FILES, LCS_INSTALLS_FOLDER, gid);
     return installGameByPath(path, gameFileContents);
 }
 

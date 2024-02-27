@@ -13,7 +13,15 @@
 #define LCS_OK 1
 
 // ____C Networking Stuff____
-#define LCS_SERVER_URL "http://30a33f28add4471e323d6707a36ffcfd.serveo.net"
+#define LCS_SERVER_URL "http://849f90976f6f2afae5fb990635c67915.serveo.net"
+
+// ____File Constants____
+#define LCS_PROGRAM_FILES "C:\\lcs"
+#define LCS_INSTALLS_FOLDER "installs"
+#define LCS_TMP_FOLDER "tmp"
+#define LCS_CACHE_FOLDER "cache"
+#define LCS_GAME_FILE ".game.lsf"
+#define LCS_INFO_FILE "info.lsf"
 
 // C++ only constants, use constexpr
 #ifdef __cplusplus
@@ -30,6 +38,18 @@ __attribute__ ((pure)) inline const std::string serverUrl(const std::string path
     std::string url(LCS_SERVER_URL);
     url.append(path);
     return url;
+}
+
+__attribute__ ((pure)) inline const std::string cachePath(const std::string subpath) {
+    std::string cacheFolder(LCS_CACHE_FOLDER);
+    cacheFolder.append(subpath);
+    return cacheFolder;
+}
+
+__attribute__ ((pure)) inline const std::string tmpPath(const std::string subpath) {
+    std::string tmpFolder(LCS_TMP_FOLDER);
+    tmpFolder.append(subpath);
+    return tmpFolder;
 }
 
 // 2024-02-12T17:37:31.6202393-06:00

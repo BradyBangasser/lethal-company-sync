@@ -4,6 +4,8 @@
 #include <string>
 #include <stdio.h>
 #include <chrono>
+#include <http.hpp>
+
 #include "../util/time.hpp"
 #include "../errors.hpp"
 #include "../constants.hpp"
@@ -30,8 +32,6 @@ Mod::Mod(const std::string id, const std::string name, const std::string downloa
     this->description = description;
     this->updated = creation;
     this->hash = hash;
-
-    this->installed = false;
 }
 
 Mod Mod::parseJson(std::string jsonString) {
@@ -56,11 +56,7 @@ Mod Mod::parseJson(std::string jsonString) {
     return Mod(id, name, downloadUrl, version, description, timeStamp, hash);
 }
 
-Mod Mod::fetch(std::string id) {
-
-    
-
-
+Mod Mod::fetch(std::string id, bool force) {
     std::string res;
 
     try {
@@ -73,6 +69,25 @@ Mod Mod::fetch(std::string id) {
     return parseJson(res);
 }
 
-ModStatus Mod::check() {
+Mod::ModStatus Mod::install() {
+    int result = 0;
+
+    if (this->check() == ModStatus::ALL_GOOD) return ModStatus::ALREADY_INSTALLED;
+
+    result = this->download(tmpPath(this->id));
+    if (result != ModStatus::ALL_GOOD) {
+        return (ModStatus) result;
+    }
+
+    return ModStatus::ALL_GOOD;
+}
+
+Mod::ModStatus Mod::check() {
+    return ModStatus::NOT_INSTALLED;
+}
+
+Mod::ModStatus Mod::download(const std::string path) {
+
+    blib_http::request<int>(this->downloadUrl, path);
     return ModStatus::NOT_INSTALLED;
 }
