@@ -30,7 +30,7 @@
 
 // ____Network Stuff____
 
-/*
+/**
     Generates a request url for the server
     @param path the endpoint that you would like to request
 */
@@ -48,8 +48,8 @@ __attribute__ ((pure)) inline const std::string cachePath(const std::string subp
 
 __attribute__ ((pure)) inline const std::string tmpPath(const std::string subpath) {
     std::string tmpFolder(LCS_TMP_FOLDER);
-    tmpFolder.append(subpath);
-    return tmpFolder;
+    tmpFolder.append("/" + subpath);
+    return serverUrl(tmpFolder);
 }
 
 // 2024-02-12T17:37:31.6202393-06:00

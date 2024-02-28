@@ -54,6 +54,9 @@ static inline int installGame(const char *gid, const char *gameFileContents) {
     return installGameByPath(path, gameFileContents);
 }
 
+static inline int fmove(const char *from, const char *to) {
+    return rename(from, to);
+}
 
 #ifdef __cplusplus
 }

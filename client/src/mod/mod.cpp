@@ -9,6 +9,9 @@
 #include "../util/time.hpp"
 #include "../errors.hpp"
 #include "../constants.hpp"
+#include "../util/utils.h"
+#include "../fs/files.hpp"
+#include "../fs/lsf.h"
 
 using json = nlohmann::json;
 
@@ -74,9 +77,24 @@ Mod::ModStatus Mod::install() {
 
     if (this->check() == ModStatus::ALL_GOOD) return ModStatus::ALREADY_INSTALLED;
 
-    result = this->download(tmpPath(this->id));
+    std::string downloadPath = tmpPath(this->id);
+
+    result = this->download(downloadPath);
     if (result != ModStatus::ALL_GOOD) {
         return (ModStatus) result;
+    }
+
+    // There will be an unzipping/unpacking algorithm here eventually
+    
+    // Also add profiles
+
+
+
+    result = fmove(downloadPath.c_str(), installPath.c_str());
+
+    if (result != 0) {
+        // cry 
+        return ModStatus::INTERNAL_ERROR;
     }
 
     return ModStatus::ALL_GOOD;
@@ -87,7 +105,40 @@ Mod::ModStatus Mod::check() {
 }
 
 Mod::ModStatus Mod::download(const std::string path) {
+    int result;
 
-    blib_http::request<int>(this->downloadUrl, path);
-    return ModStatus::NOT_INSTALLED;
+    result = blib_http::request<int>(this->downloadUrl, path);
+
+    if (result != 0) {
+        return ModStatus::FAILED_TO_DOWNLOAD;
+    }
+
+    uint8_t hash[65];
+    uint32_t len;
+    result = fsha512(hash, path.c_str(), &len);
+
+    if (result != LCS_OK) {
+        return ModStatus::INTERNAL_ERROR;
+    }
+
+    if (strcmp(this->hash.c_str(), (char *) hash) != 0) {
+        // TODO: report this to the server somehow, this will ensure we don't have bad files on the server
+
+        result = remove(path.c_str());
+        if (result != 0) {
+            return ModStatus::INTERNAL_ERROR;
+        }
+    }
+
+    return ModStatus::ALL_GOOD;
+}
+
+int Mod::writeLSF(const std::string path) {
+    struct LSFValue *vals = createLSFValue("id", this->id.c_str());
+
+    writeLSFFile(path.c_str(), vals);
+
+    freeLSFValues(vals);
+
+    return LCS_OK;
 }

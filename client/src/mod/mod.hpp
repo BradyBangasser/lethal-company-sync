@@ -35,19 +35,30 @@ class Mod {
         enum ModStatus {
             // For general use
             ALL_GOOD,
+            INTERNAL_ERROR,
             // For checking mods
             OUT_OF_DATE,
             CORRUPT,
             NOT_INSTALLED,
             // For installs
-            ALREADY_INSTALLED
+            ALREADY_INSTALLED,
+            FAILED_TO_DOWNLOAD,
         };
 
-        inline const std::string getId() { return this->id; }
-        inline const std::string getName() { return this->name; }
-        inline const std::string getDownloadUrl() { return this->downloadUrl; }
-        inline const std::string getVersion() { return this->version; }
-        inline const std::string getDescription() { return this->name; }
+        inline const std::string getId() noexcept { return this->id; }
+        inline const std::string getName() noexcept { return this->name; }
+        inline const std::string getDownloadUrl() noexcept { return this->downloadUrl; }
+        inline const std::string getVersion() noexcept { return this->version; }
+        inline const std::string getDescription() noexcept { return this->name; }
+
+        /**
+         * @brief This will write the LSFValue of the Mod to the specified file
+         * @warning This will overwrite the specified file
+         * 
+         * @param path the path of the specified file
+         * @return @ref LCS_OK on ok, else not @ref LCS_OK
+         */
+        int writeLSF(const std::string path) noexcept;
 
         /**
          * @brief Downloads the 
@@ -62,7 +73,7 @@ class Mod {
             Checks the mods version and hash with the server to see if the mod is corrupt or there is a new version
             @returns a @ref ModStatus
         */
-        ModStatus check();
+        ModStatus check() noexcept;
 
         /**
             Attempts to fix any issues found by @ref check, except for not installed
@@ -79,13 +90,21 @@ class Mod {
         static Mod parseJson(std::string json);
 
         /**
-            Attempts to fetch mod infomation from the server, it does NOT download the mod
-            @param id The Mod's id
-        */
+         *  @brief Attempts to fetch mod infomation from the server, it does NOT download the mod
+         *  
+         *  @param id The Mod's id
+         *  @return Mod
+         */
         static Mod fetch(std::string id, bool force = false);
 
-        static Mod fromModFile(std::string path);
-        static Mod fromGameFileLine(std::string line);
+        /**
+         * @brief Attempts to create 
+         * 
+         * @param path The Path of the specified file
+         * @return Mod 
+         */
+        static Mod fromLSFFile(std::string path);
+
         static inline bool verify(std::string id) { return verifyId(id) && network::verifyMod(id) == 0; }
 };
 
