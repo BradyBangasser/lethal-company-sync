@@ -7,6 +7,8 @@ import (
 	routes_mod___id___download "lsc.bangasser.dev/src/routes/mod/__id__/download"
 	routes_mod___id__ "lsc.bangasser.dev/src/routes/mod/__id__"
 	routes_ping "lsc.bangasser.dev/src/routes/ping"
+	routes_report "lsc.bangasser.dev/src/routes/report"
+	routes_report___id__ "lsc.bangasser.dev/src/routes/report/__id__"
 	"github.com/gin-gonic/gin"
 )
 
@@ -30,5 +32,11 @@ func CreateRouter(r *gin.Engine) {
 	}
 	r_ping := r.Group("/ping"); {
 		r_ping.GET("/", routes_ping.GET)
+	}
+	r_report := r.Group("/report"); {
+		r_report.GET("/", routes_report.GET)
+		r_report___id__ := r_report.Group("/:id"); {
+			r_report___id__.POST("/", routes_report___id__.POST)
+		}
 	}
 }

@@ -37,7 +37,7 @@ int hash(const EVP_MD *algorithm, uint8_t *buffer, const char *msg, uint32_t *ha
 
 int hashFile(const EVP_MD *algorithm, uint8_t *result, const char *filePath, uint32_t *hashLen) {
     if (algorithm == NULL) return INVALID_ALGORITHM;
-    int result;
+    int res;
     char buffer[FILE_BUFFER_LENGTH] = { 0 };
 
     FILE *f = fopen(filePath, "r");
@@ -46,10 +46,10 @@ int hashFile(const EVP_MD *algorithm, uint8_t *result, const char *filePath, uin
         return FAILED_TO_OPEN_FILE;
     }
 
-    EVP_MD_CTX *ctx = EVP_MD_ctx_init();
-    result = EVP_DigestInit(ctx, algorithm);
+    EVP_MD_CTX *ctx = EVP_MD_CTX_new();
+    res = EVP_DigestInit(ctx, algorithm);
 
-    if (result != 0) {
+    if (res != 0) {
         fclose(f);
         EVP_MD_CTX_free(ctx);
         return ALGORITHM_INIT_ERROR;
@@ -67,12 +67,12 @@ int hashFile(const EVP_MD *algorithm, uint8_t *result, const char *filePath, uin
         }
     }
 
-    result = EVP_DigestFinal_ex(ctx, result, hashLen);
+    res = EVP_DigestFinal_ex(ctx, result, hashLen);
 
     EVP_MD_CTX_free(ctx);
     fclose(f);
 
-    if (result == 0) {
+    if (res == 0) {
         return ALGORITHM_FINAL_ERROR;
     }
 

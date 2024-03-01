@@ -19,12 +19,13 @@ class Mod {
         std::string downloadUrl;
         std::string version;
         std::string description;
-        // SHA256 sum of the zipped mod, provided by server
+        // SHA512 sum of the zipped mod, provided by server
         std::string hash;
         // When the mod was updated/created last
         std::chrono::system_clock::time_point updated;
         size_t unzippedSize;
         size_t zippedSize;
+        std::string slashSepartedId;
         std::string installPath;
 
         Mod(const std::string id, const std::string name, const std::string downloadUrl, const std::string version, const std::string description, const std::chrono::system_clock::time_point timeStamp, const std::string hash);

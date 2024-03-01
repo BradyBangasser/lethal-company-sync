@@ -4,6 +4,7 @@
 #include <string>
 #include <stdio.h>
 #include <chrono>
+#include <format>
 #include <http.hpp>
 
 #include "../util/time.hpp"
@@ -35,6 +36,10 @@ Mod::Mod(const std::string id, const std::string name, const std::string downloa
     this->description = description;
     this->updated = creation;
     this->hash = hash;
+
+    std::string idc = id;
+
+    this->slashSepartedId = idc.replace(idc.begin(), idc.end(), ':', PATH_SLASH);
 }
 
 Mod Mod::parseJson(std::string jsonString) {
@@ -77,7 +82,8 @@ Mod::ModStatus Mod::install() {
 
     if (this->check() == ModStatus::ALL_GOOD) return ModStatus::ALREADY_INSTALLED;
 
-    std::string downloadPath = tmpPath(this->id);
+    printf("%s id\n", id.c_str());
+    std::string downloadPath = tmpPath(this->slashSepartedId);
 
     result = this->download(downloadPath);
     if (result != ModStatus::ALL_GOOD) {
@@ -100,13 +106,15 @@ Mod::ModStatus Mod::install() {
     return ModStatus::ALL_GOOD;
 }
 
-Mod::ModStatus Mod::check() {
+Mod::ModStatus Mod::check() noexcept {
     return ModStatus::NOT_INSTALLED;
 }
 
 Mod::ModStatus Mod::download(const std::string path) {
     int result;
 
+    printf("%s\n", path.c_str());
+    throw path;
     result = blib_http::request<int>(this->downloadUrl, path);
 
     if (result != 0) {
@@ -133,7 +141,7 @@ Mod::ModStatus Mod::download(const std::string path) {
     return ModStatus::ALL_GOOD;
 }
 
-int Mod::writeLSF(const std::string path) {
+int Mod::writeLSF(const std::string path) noexcept {
     struct LSFValue *vals = createLSFValue("id", this->id.c_str());
 
     writeLSFFile(path.c_str(), vals);

@@ -23,10 +23,14 @@
 #define LCS_GAME_FILE ".game.lsf"
 #define LCS_INFO_FILE "info.lsf"
 
+#define PATH_SLASH '\\'
+
 // C++ only constants, use constexpr
 #ifdef __cplusplus
 
 #include <string>
+#include <format>
+#include <type_traits>
 
 // ____Network Stuff____
 
@@ -47,9 +51,7 @@ __attribute__ ((pure)) inline const std::string cachePath(const std::string subp
 }
 
 __attribute__ ((pure)) inline const std::string tmpPath(const std::string subpath) {
-    std::string tmpFolder(LCS_TMP_FOLDER);
-    tmpFolder.append("/" + subpath);
-    return serverUrl(tmpFolder);
+    return std::format("{}{}{}{}{}", LCS_PROGRAM_FILES, PATH_SLASH, LCS_TMP_FOLDER, PATH_SLASH, subpath);
 }
 
 // 2024-02-12T17:37:31.6202393-06:00
