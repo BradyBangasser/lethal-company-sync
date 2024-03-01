@@ -4,6 +4,14 @@
 #include <http.hpp>
 #include <format>
 
+int _cacheModInfo() {
+
+}
+
+int _cacheModFile() {
+    
+}
+
 bool verifyIdFormat() {
    return false; 
 }

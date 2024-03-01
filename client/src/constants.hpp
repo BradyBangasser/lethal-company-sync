@@ -45,9 +45,7 @@ __attribute__ ((pure)) inline const std::string serverUrl(const std::string path
 }
 
 __attribute__ ((pure)) inline const std::string cachePath(const std::string subpath) {
-    std::string cacheFolder(LCS_CACHE_FOLDER);
-    cacheFolder.append(subpath);
-    return cacheFolder;
+    return std::format("{}{}{}{}{}", LCS_PROGRAM_FILES, PATH_SLASH, LCS_CACHE_FOLDER, PATH_SLASH, subpath);
 }
 
 __attribute__ ((pure)) inline const std::string tmpPath(const std::string subpath) {
