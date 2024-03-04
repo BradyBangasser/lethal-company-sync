@@ -13,6 +13,7 @@
 #include "../util/utils.h"
 #include "../fs/files.hpp"
 #include "../fs/lsf.h"
+#include "../network/cache.hpp"
 
 using json = nlohmann::json;
 
@@ -67,6 +68,14 @@ Mod Mod::parseJson(std::string jsonString) {
 
 Mod Mod::fetch(std::string id, bool force) {
     std::string res;
+
+    if (!force) {
+        // Attempt to fetch from installs or cache
+
+
+    } else {
+
+    }
 
     try {
         res = network::fetchMod(id);
@@ -153,4 +162,15 @@ int Mod::writeLSF(const std::string path) noexcept {
     freeLSFValues(vals);
 
     return LCS_OK;
+}
+
+int Mod::isCached(std::string modId) {
+    using namespace cache_manager;
+    CacheStatus result = checkCache("/mod", "/" + modId.replace(modId.begin(), modId.end(), ':', '/'));
+
+    if (result == CacheStatus::HIT) {
+        return 0;
+    } else {
+        return -1;
+    }
 }

@@ -77,6 +77,23 @@ class Mod {
         ModStatus check() noexcept;
 
         /**
+         * @brief 
+         * 
+         * @return int 
+         */
+        static int isInstalled(std::string modId) noexcept;
+        inline int isInstalled() noexcept { return Mod::isInstalled(this->id); };
+
+
+        /**
+         * @brief checks the /mod cache for the current mod
+         * 
+         * @return int 
+         */
+        static int isCached(std::string modId) noexcept;
+        inline int isCached() noexcept { return Mod::isCached(this->id); };
+
+        /**
             Attempts to fix any issues found by @ref check, except for not installed
             @param force Force the fix regardless of the @ref check status
             @returns true if success, else false
