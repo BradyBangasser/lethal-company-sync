@@ -6,8 +6,6 @@
  * @brief This namespace holds functions for controlling the fs caching system
  */
 namespace cache_manager {
-    const static std::string cachePath = 
-
     enum CacheStatus {
         HIT,
         MISS,
@@ -32,7 +30,7 @@ namespace cache_manager {
      * @param id cacheId 
      * @return CacheId 
      */
-    inline CacheId _serializeCacheId(CacheId id) noexcept {
+    static inline CacheId _serializeCacheId(CacheId id) noexcept {
         // so I don't have to always use backslashes, also for future complatibity with unix based systems
         id.replace(id.begin(), id.end(), '/', '\\');
 
@@ -42,6 +40,10 @@ namespace cache_manager {
         }
 
         return id;
+    }
+
+    static inline std::string _getCachePath(CacheId cacheId, ObjectId objectId) {
+        return cachePath(cacheId + PATH_SLASH + objectId);
     }
 
     /**

@@ -15,6 +15,9 @@ extern "C" {
 unsigned char *base64Encode(const unsigned char *src, size_t len, size_t *outLen);
 unsigned char *base64Decode(const unsigned char *src, size_t len, size_t *outLen);
 
+// Hex
+void printHexValues(uint8_t *values, size_t len, char separator);
+
 // Hashing and encryption
 #define INVALID_ALGORITHM -11
 #define ALGORITHM_INIT_ERROR -12

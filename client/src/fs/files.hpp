@@ -58,6 +58,8 @@ static inline int fmove(const char *from, const char *to) {
     return rename(from, to);
 }
 
+int mkSubDirs(const char *path);
+
 #ifdef __cplusplus
 }
 #endif

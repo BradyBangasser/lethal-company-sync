@@ -39,7 +39,8 @@ Mod::Mod(const std::string id, const std::string name, const std::string downloa
 
     std::string idc = id;
 
-    this->slashSepartedId = idc.replace(idc.begin(), idc.end(), ':', PATH_SLASH);
+    std::replace(idc.begin(), idc.end(), ':', PATH_SLASH);
+    this->slashSepartedId = idc;
 }
 
 Mod Mod::parseJson(std::string jsonString) {
@@ -85,6 +86,8 @@ Mod::ModStatus Mod::install() {
     printf("%s id\n", id.c_str());
     std::string downloadPath = tmpPath(this->slashSepartedId);
 
+    mkSubDirs(downloadPath.c_str());
+
     result = this->download(downloadPath);
     if (result != ModStatus::ALL_GOOD) {
         return (ModStatus) result;
@@ -113,17 +116,18 @@ Mod::ModStatus Mod::check() noexcept {
 Mod::ModStatus Mod::download(const std::string path) {
     int result;
 
-    printf("%s\n", path.c_str());
-    throw path;
     result = blib_http::request<int>(this->downloadUrl, path);
 
     if (result != 0) {
         return ModStatus::FAILED_TO_DOWNLOAD;
     }
 
-    uint8_t hash[65];
+    uint8_t hash[129];
     uint32_t len;
     result = fsha512(hash, path.c_str(), &len);
+
+    printHexValues(hash, 129, '\0');
+    printf("%s this\n", this->hash.c_str());
 
     if (result != LCS_OK) {
         return ModStatus::INTERNAL_ERROR;
