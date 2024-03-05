@@ -60,13 +60,21 @@ namespace cache_manager {
 
     /**
      * @brief Copys the provided file to the cache
+     * @warning This will overwrite the object if it exists
      * 
      * @param cacheId The Cache Id
      * @param objectId The Object Id
      * @param filePath The File Path
      * @return int 
      */
-    int cacheInsert(CacheId cacheId, ObjectId objectId, std::string filePath);
+    int cacheInsert(CacheId cacheId, ObjectId objectId, std::string filePath) noexcept;
 
-    int cacheDelete(CacheId cacheId, ObjectId objectId);
+    /**
+     * @brief 
+     * 
+     * @param cacheId 
+     * @param objectId 
+     * @return int 
+     */
+    int cacheDelete(CacheId cacheId, ObjectId objectId) noexcept;
 }

@@ -54,10 +54,23 @@ static inline int installGame(const char *gid, const char *gameFileContents) {
     return installGameByPath(path, gameFileContents);
 }
 
+/**
+ * @brief Moves a file
+ * 
+ * @param from the origin
+ * @param to the distination 
+ * @return 0 on success
+ */
 static inline int fmove(const char *from, const char *to) {
     return rename(from, to);
 }
 
+/**
+ * @brief Makes all of the nonexist parent directories for the file at the specified path
+ * 
+ * @param path the specified path
+ * @return 0 on ok, else not ok
+ */
 int mkSubDirs(const char *path);
 
 #ifdef __cplusplus
