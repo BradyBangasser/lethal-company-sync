@@ -53,7 +53,7 @@ namespace cache_manager {
      * @param objectId 
      * @return CacheStatus 
      */
-    CacheStatus checkCache(CacheId cacheId, ObjectId objectId);
+    CacheStatus checkCache(CacheId cacheId, ObjectId objectId) noexcept;
 
     std::string fetchFromCache(CacheId cacheId, ObjectId objectId);
     int fetchFromCache(CacheId cacheId, ObjectId objectId, std::string path);

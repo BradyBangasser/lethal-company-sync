@@ -164,7 +164,7 @@ int Mod::writeLSF(const std::string path) noexcept {
     return LCS_OK;
 }
 
-int Mod::isCached(std::string modId) {
+int Mod::isCached(std::string modId) noexcept {
     using namespace cache_manager;
     CacheStatus result = checkCache("/mod", "/" + modId.replace(modId.begin(), modId.end(), ':', '/'));
 

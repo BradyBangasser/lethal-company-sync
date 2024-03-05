@@ -38,32 +38,31 @@ int hash(const EVP_MD *algorithm, uint8_t *buffer, const char *msg, uint32_t *ha
 int hashFile(const EVP_MD *algorithm, uint8_t *result, const char *filePath, uint32_t *hashLen) {
     if (algorithm == NULL) return INVALID_ALGORITHM;
     int res;
+    size_t n;
     char buffer[FILE_BUFFER_LENGTH] = { 0 };
 
-    FILE *f = fopen(filePath, "r");
+    FILE *f = fopen(filePath, "rb");
 
     if (f == NULL) {
         return FAILED_TO_OPEN_FILE;
     }
 
     EVP_MD_CTX *ctx = EVP_MD_CTX_new();
-    res = EVP_DigestInit(ctx, algorithm);
+    res = EVP_DigestInit_ex(ctx, algorithm, NULL);
 
-    if (res != 0) {
+    if (res == 0) {
         fclose(f);
         EVP_MD_CTX_free(ctx);
         return ALGORITHM_INIT_ERROR;
     }
 
-    while (1) {
-        if (fgets(buffer, FILE_BUFFER_LENGTH, f) != NULL) {
-            if (EVP_DigestUpdate(ctx, buffer, strlen(buffer)) == 0) {
-                EVP_MD_CTX_free(ctx);
-                fclose(f);
-                return ALGORITHM_UPDATE_ERROR;
-            }
-        } else {
-            break;
+    while ((n = fread(buffer, 1, sizeof(buffer), f))) {
+        res = EVP_DigestUpdate(ctx, buffer, n);
+
+        if (res == 0) {
+            EVP_MD_CTX_free(ctx);
+            fclose(f);
+            return ALGORITHM_UPDATE_ERROR;
         }
     }
 
