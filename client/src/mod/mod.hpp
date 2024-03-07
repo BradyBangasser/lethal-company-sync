@@ -44,6 +44,7 @@ class Mod {
             // For installs
             ALREADY_INSTALLED,
             FAILED_TO_DOWNLOAD,
+            CACHE_HIT,
         };
 
         inline const std::string getId() noexcept { return this->id; }
@@ -62,12 +63,13 @@ class Mod {
         int writeLSF(const std::string path) noexcept;
 
         /**
-         * @brief Downloads the 
+         * @brief Downloads the contents of the mod
+         * @note This will only check the cache for the compressed 
          * 
          * @param path 
          * @return int 
          */
-        ModStatus download(const std::string path);
+        ModStatus download(const std::string path, bool force = false);
 
         ModStatus install();
         /**

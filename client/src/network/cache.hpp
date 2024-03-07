@@ -1,4 +1,5 @@
 #include <string>
+#include <algorithm>
 
 #include "../constants.hpp"
 
@@ -32,7 +33,7 @@ namespace cache_manager {
      */
     static inline CacheId _serializeCacheId(CacheId id) noexcept {
         // so I don't have to always use backslashes, also for future complatibity with unix based systems
-        id.replace(id.begin(), id.end(), '/', '\\');
+        std::replace(id.begin(), id.end(), '/', '\\');
 
         // make sure id starts with "\"
         if (id[0] != '\\') {
@@ -55,7 +56,7 @@ namespace cache_manager {
      */
     CacheStatus checkCache(CacheId cacheId, ObjectId objectId) noexcept;
 
-    std::string fetchFromCache(CacheId cacheId, ObjectId objectId);
+    __attribute__((pure)) static inline std::string fetchFromCache(CacheId cacheId, ObjectId objectId) { return _getCachePath(cacheId, objectId); }
     int fetchFromCache(CacheId cacheId, ObjectId objectId, std::string path);
 
     /**
@@ -67,7 +68,7 @@ namespace cache_manager {
      * @param filePath The File Path
      * @return int 
      */
-    int cacheInsert(CacheId cacheId, ObjectId objectId, std::string filePath) noexcept;
+    int cacheInsert(CacheId cacheId, ObjectId objectId, std::string filePath, bool copy = true) noexcept;
 
     /**
      * @brief 

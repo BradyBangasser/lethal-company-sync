@@ -17,6 +17,7 @@ unsigned char *base64Decode(const unsigned char *src, size_t len, size_t *outLen
 
 // Hex
 void printHexValues(uint8_t *values, size_t len, char separator);
+int toHexString(uint8_t *values, size_t len, char *buffer);
 
 // Hashing and encryption
 #define INVALID_ALGORITHM -11

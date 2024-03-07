@@ -19,6 +19,10 @@ int mkSubDirs(const char *path) {
 
     curs = strtok(mpath, separtator);
 
+    if (curs == NULL) {
+        return 1;
+    }
+
     strcpy(pathBuilder, curs);
 
     // Will create all but last file
@@ -33,6 +37,42 @@ int mkSubDirs(const char *path) {
             sprintf(pathBuilder, "%s%c%s", pathBuilder, PATH_SLASH, curs);
         }
     } while (curs = strtok(NULL, separtator), curs != NULL);
+
+    return 0;
+}
+
+// TODO, add error checking
+int fcopy(const char *from, const char *to) {
+    int result;
+    size_t n;
+    char buffer[4096];
+
+    result = mkSubDirs(to);
+
+    if (result != 0) {
+        return -1;
+    }
+
+    FILE *t = fopen(to, "w");
+
+    if (t == NULL) {
+        return -2;
+    }
+
+    FILE *f = fopen(from, "r");
+    if (f == NULL) {
+        fclose(t);
+        return -3;
+    }
+
+    printf("This\n");
+
+    while ((n = fread(buffer, 1, sizeof(buffer), f))) {
+        fwrite(buffer, 1, sizeof(buffer), t);
+    }
+
+    fclose(f);
+    fclose(t);
 
     return 0;
 }

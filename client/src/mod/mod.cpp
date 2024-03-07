@@ -6,6 +6,7 @@
 #include <chrono>
 #include <format>
 #include <http.hpp>
+#include <algorithm>
 
 #include "../util/time.hpp"
 #include "../errors.hpp"
@@ -92,7 +93,7 @@ Mod::ModStatus Mod::install() {
 
     if (this->check() == ModStatus::ALL_GOOD) return ModStatus::ALREADY_INSTALLED;
 
-    printf("%s id\n", id.c_str());
+    // Change this to use the built in tmpFile
     std::string downloadPath = tmpPath(this->slashSepartedId);
 
     mkSubDirs(downloadPath.c_str());
@@ -105,8 +106,6 @@ Mod::ModStatus Mod::install() {
     // There will be an unzipping/unpacking algorithm here eventually
     
     // Also add profiles
-
-
 
     result = fmove(downloadPath.c_str(), installPath.c_str());
 
@@ -122,8 +121,19 @@ Mod::ModStatus Mod::check() noexcept {
     return ModStatus::NOT_INSTALLED;
 }
 
-Mod::ModStatus Mod::download(const std::string path) {
+Mod::ModStatus Mod::download(const std::string path, bool force) {
     int result;
+
+    if (!force) {
+        if (this->isCached(this->id) == 0) {
+            // throw "here";
+            if (cache_manager::fetchFromCache("/mod", "/" + this->slashSepartedId, path) != 0) {
+                return ModStatus::INTERNAL_ERROR;
+            } else {
+                return ModStatus::CACHE_HIT;
+            }
+        }
+    }
 
     result = blib_http::request<int>(this->downloadUrl, path);
 
@@ -133,16 +143,16 @@ Mod::ModStatus Mod::download(const std::string path) {
 
     uint8_t hash[129];
     uint32_t len;
+    char hashString[129];
     result = fsha512(hash, path.c_str(), &len);
 
-    printHexValues(hash, 129, '\0');
-    printf("%s this\n", this->hash.c_str());
+    toHexString(hash, len, hashString);
 
     if (result != LCS_OK) {
         return ModStatus::INTERNAL_ERROR;
     }
 
-    if (strcmp(this->hash.c_str(), (char *) hash) != 0) {
+    if (strcmp(this->hash.c_str(), (char *) hashString) != 0) {
         // TODO: report this to the server somehow, this will ensure we don't have bad files on the server
 
         result = remove(path.c_str());
@@ -150,6 +160,10 @@ Mod::ModStatus Mod::download(const std::string path) {
             return ModStatus::INTERNAL_ERROR;
         }
     }
+
+    // Caching
+
+    cache_manager::cacheInsert("/mod", "/" + this->slashSepartedId, path);
 
     return ModStatus::ALL_GOOD;
 }
@@ -166,7 +180,8 @@ int Mod::writeLSF(const std::string path) noexcept {
 
 int Mod::isCached(std::string modId) noexcept {
     using namespace cache_manager;
-    CacheStatus result = checkCache("/mod", "/" + modId.replace(modId.begin(), modId.end(), ':', '/'));
+    std::replace(modId.begin(), modId.end(), ':', '/');
+    CacheStatus result = checkCache("/mod", "/" + modId);
 
     if (result == CacheStatus::HIT) {
         return 0;

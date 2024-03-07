@@ -18,18 +18,19 @@ CacheStatus cache_manager::checkCache(CacheId cacheId, ObjectId objectId) noexce
     return CacheStatus::HIT;
 } // Fetch From Cache
 
-int cache_manager::cacheInsert(CacheId cacheId, ObjectId objectId, std::string path) noexcept {
+int cache_manager::cacheInsert(CacheId cacheId, ObjectId objectId, std::string path, bool copy) noexcept {
     int result;
 
-    const char *opath = _getCachePath(cacheId, objectId).c_str();
+    std::string opath = _getCachePath(cacheId, objectId);
+    const char *copath = opath.c_str();
     
-    result = mkSubDirs(opath);
+    result = mkSubDirs(copath);
 
     if (result != 0) {
         return -1;
     }
 
-    result = fmove(path.c_str(), opath);
+    result = (copy ? fcopy(path.c_str(), copath) : fmove(path.c_str(), copath));
 
     if (result != 0) {
         return -1;
@@ -40,4 +41,19 @@ int cache_manager::cacheInsert(CacheId cacheId, ObjectId objectId, std::string p
 
 int cache_manager::cacheDelete(CacheId cacheId, ObjectId objectId) noexcept {
     return remove(_getCachePath(cacheId, objectId).c_str());
+}
+
+int cache_manager::fetchFromCache(CacheId cacheId, ObjectId objectId, std::string path) {
+    std::string cpath = _getCachePath(cacheId, objectId);
+
+    struct stat s;
+
+    if (stat(cpath.c_str(), &s) == -1) {
+        if (errno == ENOENT) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+    return fcopy(cpath.c_str(), path.c_str());
 }

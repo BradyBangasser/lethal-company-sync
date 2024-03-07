@@ -73,6 +73,15 @@ static inline int fmove(const char *from, const char *to) {
  */
 int mkSubDirs(const char *path);
 
+/**
+ * @brief 
+ * 
+ * @param to 
+ * @param from 
+ * @return returns 0 on success
+ */
+int fcopy(const char *from, const char *to);
+
 #ifdef __cplusplus
 }
 #endif

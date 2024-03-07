@@ -5,11 +5,11 @@
 #include <format>
 
 int _cacheModInfo() {
-
+    return LCS_NOT_IMPLEMENTED_YET;
 }
 
 int _cacheModFile() {
-    
+    return LCS_NOT_IMPLEMENTED_YET;
 }
 
 bool verifyIdFormat() {

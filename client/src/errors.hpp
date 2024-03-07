@@ -2,6 +2,7 @@
 #define LCS_ERRORS_HPP
 
 #include <stdio.h>
+#include <string>
 
 template<typename T, typename = void>
 struct has_what : std::false_type {};

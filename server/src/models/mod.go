@@ -54,6 +54,7 @@ func generateDebugMods(games []Game, num int) []Mod {
 			Version: "1.0.0",
 			UploadTimeStamp: time.Now(),
 			Id: generateModId(game.Id, name),
+			Hash: "f98fe137bb7047ac4e6f519a3db4b9fdc4bed0a16a778807a537295404df904dfdf48940d2796f8fc1b99e4d9e860f0b8c649afa71d36a78ccd4ed0168d934d9",
 		})
 	}
 
