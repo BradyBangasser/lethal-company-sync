@@ -4,18 +4,18 @@
 
 using namespace cache_manager;
 
-CacheStatus cache_manager::checkCache(CacheId cacheId, ObjectId objectId) noexcept {
+Status cache_manager::checkCache(CacheId cacheId, ObjectId objectId) noexcept {
     std::string path = _getCachePath(cacheId, objectId);
 
     struct stat b;
 
     if (stat(path.c_str(), &b) != 0) {
-        return CacheStatus::MISS;
+        return Status::CACHE_MISS;
     }
 
     // This will need to check if the data is outdated or not
 
-    return CacheStatus::HIT;
+    return Status::CACHE_HIT;
 } // Fetch From Cache
 
 int cache_manager::cacheInsert(CacheId cacheId, ObjectId objectId, std::string path, bool copy) noexcept {

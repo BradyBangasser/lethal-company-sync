@@ -8,10 +8,6 @@
 #define LCS_MID_LENGTH 56
 #define LCS_MPID_LENGTH 8
 
-// ____C Return Types____
-#define LCS_NOT_IMPLEMENTED_YET -99999
-#define LCS_OK 1
-
 // ____C Networking Stuff____
 #define LCS_SERVER_URL "http://849f90976f6f2afae5fb990635c67915.serveo.net"
 
@@ -63,5 +59,18 @@ static inline constexpr short gameIdLength = 6;
 static inline constexpr short modIdLength = 56;
 
 #endif
+
+enum Status {
+    ALL_GOOD,
+    INTERNAL_ERROR,
+    NOT_IMPLEMENTED_YET,
+    OUT_OF_DATE,
+    CORRUPT,
+    NOT_INSTALLED,
+    INSTALLED,
+    DOWNLOAD_FAILED,
+    CACHE_HIT,
+    CACHE_MISS,
+};
 
 #endif

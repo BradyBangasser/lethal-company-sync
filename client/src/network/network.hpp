@@ -13,17 +13,10 @@ namespace network {
         public:
             NetworkError() = delete;
             NetworkError(int code, std::string msg);
-            const char *what();
+            virtual const char *what();
     };
 
-    int verifyMod(const std::string id) noexcept;
-    const std::vector<std::string> verifyMod(const std::vector<std::string>);
     int checkVersion();
-
-    /*
-        Attempts to fetch the mod JSON from 
-    */
-    std::string fetchMod(const std::string id);
 }
 // Caching needed
 

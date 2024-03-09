@@ -1,2 +1,3 @@
 Game Id: $(Hex int (6 char), unsigned int determined by server when regestering a game)
-Mod Id: $(gameId):$(hex SHA-224 (56 char) of the name of the mod)
+Mod Id: $(R or M or nothing depending on type)$(gameId):$(hex SHA-224 (56 char) of the name of the mod)
+Pack Id: P$(gameId):$(unix epoch in hex)$(random uint8 in hex)

@@ -7,12 +7,6 @@
  * @brief This namespace holds functions for controlling the fs caching system
  */
 namespace cache_manager {
-    enum CacheStatus {
-        HIT,
-        MISS,
-        OUTDATED,
-    };
-
     /**
      * @brief The cache ID, basically the path to where the cached files will be stored, should start with a / and be path safe
      * @example /mod
@@ -54,7 +48,7 @@ namespace cache_manager {
      * @param objectId 
      * @return CacheStatus 
      */
-    CacheStatus checkCache(CacheId cacheId, ObjectId objectId) noexcept;
+    Status checkCache(CacheId cacheId, ObjectId objectId) noexcept;
 
     __attribute__((pure)) static inline std::string fetchFromCache(CacheId cacheId, ObjectId objectId) { return _getCachePath(cacheId, objectId); }
     int fetchFromCache(CacheId cacheId, ObjectId objectId, std::string path);

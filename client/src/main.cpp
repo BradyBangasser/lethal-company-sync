@@ -8,6 +8,7 @@
 #include "fs/files.hpp"
 #include <limits.h>
 #include "fs/lsf.h"
+#include "output.hpp"
 
 // This verified that all of the required folders and files exist
 int init() {

@@ -65,8 +65,6 @@ int fcopy(const char *from, const char *to) {
         return -3;
     }
 
-    printf("This\n");
-
     while ((n = fread(buffer, 1, sizeof(buffer), f))) {
         fwrite(buffer, 1, sizeof(buffer), t);
     }

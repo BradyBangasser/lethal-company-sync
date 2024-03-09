@@ -28,25 +28,13 @@ class Mod {
         std::string slashSepartedId;
         std::string installPath;
 
+        static inline const std::string modDataCache = "/mod/data";
+
         Mod(const std::string id, const std::string name, const std::string downloadUrl, const std::string version, const std::string description, const std::chrono::system_clock::time_point timeStamp, const std::string hash);
 
         static bool verifyId(std::string id);
     
     public:
-        enum ModStatus {
-            // For general use
-            ALL_GOOD,
-            INTERNAL_ERROR,
-            // For checking mods
-            OUT_OF_DATE,
-            CORRUPT,
-            NOT_INSTALLED,
-            // For installs
-            ALREADY_INSTALLED,
-            FAILED_TO_DOWNLOAD,
-            CACHE_HIT,
-        };
-
         inline const std::string getId() noexcept { return this->id; }
         inline const std::string getName() noexcept { return this->name; }
         inline const std::string getDownloadUrl() noexcept { return this->downloadUrl; }
@@ -64,19 +52,21 @@ class Mod {
 
         /**
          * @brief Downloads the contents of the mod
-         * @note This will only check the cache for the compressed 
+         * @note This will only check the cache for the compressed
+         * @todo check for already installed versions, not just cached
          * 
          * @param path 
          * @return int 
          */
-        ModStatus download(const std::string path, bool force = false);
+        Status download(const std::string path, bool force = false);
 
-        ModStatus install();
+        Status install();
+        static Status install(const std::string id);
         /**
             Checks the mods version and hash with the server to see if the mod is corrupt or there is a new version
             @returns a @ref ModStatus
         */
-        ModStatus check() noexcept;
+        Status check() noexcept;
 
         /**
          * @brief 
@@ -124,8 +114,6 @@ class Mod {
          * @return Mod 
          */
         static Mod fromLSFFile(std::string path);
-
-        static inline bool verify(std::string id) { return verifyId(id) && network::verifyMod(id) == 0; }
 };
 
 #endif
