@@ -34,18 +34,26 @@
     Generates a request url for the server
     @param path the endpoint that you would like to request
 */
-__attribute__ ((pure)) inline const std::string serverUrl(const std::string path) {
+inline const std::string serverUrl(const std::string path) {
     std::string url(LCS_SERVER_URL);
     url.append(path);
     return url;
 }
 
-__attribute__ ((pure)) inline const std::string cachePath(const std::string subpath) {
+inline const std::string cachePath(const std::string subpath) {
     return std::format("{}{}{}{}{}", LCS_PROGRAM_FILES, PATH_SLASH, LCS_CACHE_FOLDER, PATH_SLASH, subpath);
 }
 
-__attribute__ ((pure)) inline const std::string tmpPath(const std::string subpath) {
+inline const std::string tmpPath(const std::string subpath) {
     return std::format("{}{}{}{}{}", LCS_PROGRAM_FILES, PATH_SLASH, LCS_TMP_FOLDER, PATH_SLASH, subpath);
+}
+
+inline const std::string lcsPath(const std::string subpath) {
+    return std::format("{}{}{}", LCS_PROGRAM_FILES, PATH_SLASH, subpath);
+}
+
+inline const std::string installPath(const std::string subpath) {
+    return std::format("{}{}{}{}{}", LCS_PROGRAM_FILES, PATH_SLASH, LCS_INSTALLS_FOLDER, PATH_SLASH, subpath);
 }
 
 // 2024-02-12T17:37:31.6202393-06:00

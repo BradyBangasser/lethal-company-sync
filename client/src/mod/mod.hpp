@@ -113,7 +113,7 @@ class Mod {
          * @param path The Path of the specified file
          * @return Mod 
          */
-        static Mod fromLSFFile(std::string path);
+        static Mod fromLSF(std::string path);
 };
 
 #endif

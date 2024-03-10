@@ -1,12 +1,17 @@
 #include "modpack.hpp"
 #include "../constants.hpp"
 #include "../network/network.hpp"
+#include "../fs/lsf.h"
+#include "../mod/mod.hpp"
 
 #include <string>
 #include <algorithm>
 #include <vector>
 #include <http.hpp>
 #include <json.hpp>
+#include <stdio.h>
+#include <list>
+#include <thread>
 
 ModPack::ModPack() {}
 ModPack::ModPack(const std::string name, const std::string id, const std::vector<std::string> modIds, uint16_t revision) {
@@ -18,7 +23,7 @@ ModPack::ModPack(const std::string name, const std::string id, const std::vector
 
     this->gameId = id.substr(1, id.find(':'));
     this->slashSepartedId = id;
-    std::replace(id.begin(), id.end(), ':', '/');
+    std::replace(id.begin(), id.end(), ':', PATH_SLASH);
 }
 
 int ModPack::addMod(const std::string id) {
@@ -63,6 +68,32 @@ int ModPack::install() {
     if (isInstalled() == Status::INSTALLED) {
         // Verify that all mods are correctly installed 
     } else {
-        
+        std::string modpackInstallPath = installPath(this->slashSepartedId);
+        this->writeLSF(modpackInstallPath);
+
+        std::list<Mod> installJobs;
+        std::list<std::string> downloadJobs;
+
+
     }
+}
+
+int ModPack::writeLSF(const std::string path) {
+    struct LSFValue *vals = createLSFValue("id", this->id.c_str());
+
+    if (vals == NULL) {
+        return -1;
+    }
+
+    if (writeLSFFile(path.c_str(), vals) != 0) {
+        freeLSFValues(vals);
+        return -1;
+    }
+
+    freeLSFValues(vals);
+    return 0;
+}
+
+ModPack ModPack::fromLSF(const std::string path) {
+    throw Status::NOT_IMPLEMENTED_YET;
 }

@@ -1,8 +1,11 @@
 #ifndef MODPACK_HPP
 #define MODPACK_HPP
 
+#include "../mod/mod.hpp"
+
 #include <string>
 #include <vector>
+#include <list>
 #include <stdint.h>
 
 // This represents the .modpack.lcs file
@@ -24,10 +27,17 @@ class ModPack {
             ALL_GOOD
         };
 
-        static ModPack fromLSFFile(std::string path);
+        static ModPack fromLSF(const std::string path);
+        int writeLSF(const std::string path);
+
         static ModPack fromJSON(std::string json);
         static ModPack fetch(const std::string id);
         static int install(ModPack *self);
+
+        // The install fn for the threads
+        static int _installer(std::list<Mod> &jobList);
+        // The download fn for the threads
+        static int _downloader(std::list<std::string> &jobList);
 
         /**
          * @brief Removes a mod from the modpack
